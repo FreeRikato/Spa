@@ -3,13 +3,12 @@ package com.example.spas.controller;
 import com.example.spas.dto.SpaDetailView;
 import com.example.spas.dto.SpaView;
 import com.example.spas.service.SpaService;
+import java.util.List;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-
 @RestController
-@RequestMapping("/api/public")
+@RequestMapping("/public")
 public class PublicController {
 
     private final SpaService spaService;
@@ -39,7 +38,9 @@ public class PublicController {
      * Edge Case: Service logic throws 404 if spaId is not found.
      */
     @GetMapping("/spas/{spaId}")
-    public ResponseEntity<SpaDetailView> getSpaDetails(@PathVariable Long spaId) {
+    public ResponseEntity<SpaDetailView> getSpaDetails(
+        @PathVariable Long spaId
+    ) {
         return ResponseEntity.ok(spaService.getSpaDetails(spaId));
     }
 }

@@ -1,0 +1,26 @@
+<nav class="bg-gray-800 text-white p-4">
+  <div class="container mx-auto flex justify-between items-center">
+    <a routerLink="/" class="text-xl font-bold">SpaBooking</a>
+    <div class="space-x-4 flex items-center">
+      <a routerLink="/" class="hover:text-gray-300">Home</a>
+
+      <!-- Logged out users see this -->
+      <ng-container *ngIf="!(currentUser$ | async)">
+        <a routerLink="/login" class="hover:text-gray-300">Login</a>
+        <a routerLink="/register" class="hover:text-gray-300">Register</a>
+      </ng-container>
+
+      <!-- Logged in users see this -->
+      <ng-container *ngIf="currentUser$ | async as user">
+        <span>Welcome, {{ user.firstName }}!</span>
+
+        <!-- Add dashboard links based on user.role here -->
+        <a *ngIf="user.role === 'USER'" routerLink="/user" class="hover:text-gray-300">Dashboard</a>
+        <a *ngIf="user.role === 'CLIENT'" routerLink="/client" class="hover:text-gray-300">My Spas</a>
+        <a *ngIf="user.role === 'ADMIN'" routerLink="/admin" class="hover:text-gray-300">Admin Panel</a>
+
+        <button (click)="logout()" class="bg-red-500 hover:bg-red-600 px-3 py-1 rounded">Logout</button>
+      </ng-container>
+    </div>
+  </div>
+</nav>

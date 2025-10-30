@@ -12,7 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/auth")
+@RequestMapping("/auth")
 public class AuthController {
 
     private final UserService userService;
@@ -27,7 +27,9 @@ public class AuthController {
      * Service logic catches "Email already in use".
      */
     @PostMapping("/register")
-    public ResponseEntity<UserView> register(@Valid @RequestBody RegistrationRequest request) {
+    public ResponseEntity<UserView> register(
+        @Valid @RequestBody RegistrationRequest request
+    ) {
         UserView newUser = userService.register(request);
         return new ResponseEntity<>(newUser, HttpStatus.CREATED);
     }
@@ -38,13 +40,16 @@ public class AuthController {
      * Service logic catches "User not found" or "Invalid password".
      */
     @PostMapping("/login")
-    public ResponseEntity<UserView> login(@Valid @RequestBody LoginRequest request, HttpSession session) {
+    public ResponseEntity<UserView> login(
+        @Valid @RequestBody LoginRequest request,
+        HttpSession session
+    ) {
         User user = userService.login(request);
-        
+
         // --- THIS IS THE CORE SESSION LOGIC ---
         // We store the 'User' object directly in the session.
         session.setAttribute("loggedInUser", user);
-        
+
         UserView userView = userService.mapToUserView(user);
         return ResponseEntity.ok(userView);
     }
@@ -58,7 +63,7 @@ public class AuthController {
         session.invalidate();
         return ResponseEntity.ok("Logged out successfully.");
     }
-    
+
     /**
      * Feature: Get current user ("Who am I?")
      * This is for your Angular frontend to check if a session is active on page load.
@@ -68,13 +73,13 @@ public class AuthController {
         // We do NOT use BaseController.getSessionUser() because
         // we don't want to throw an error if the user is just not logged in.
         User user = (User) session.getAttribute("loggedInUser");
-        
+
         // Edge Case: No user is logged in.
         if (user == null) {
             // 204 No Content is the correct HTTP status for "no data to return".
             return ResponseEntity.noContent().build();
         }
-        
+
         return ResponseEntity.ok(userService.mapToUserView(user));
     }
 }

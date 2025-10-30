@@ -15,7 +15,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/client")
+@RequestMapping("/client")
 public class ClientController extends BaseController {
 
     private final SpaService spaService;
